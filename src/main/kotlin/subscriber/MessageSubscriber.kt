@@ -1,5 +1,9 @@
-package com.yumi.kotlin.actions
+package com.yumi.kotlin.subscriber
 
+import com.yumi.kotlin.actions.AtBotAction
+import com.yumi.kotlin.actions.CommandAction
+import com.yumi.kotlin.actions.FansAction
+import com.yumi.kotlin.actions.ManagerAction
 import net.mamoe.mirai.event.GroupMessageSubscribersBuilder
 
 object MessageSubscriber {

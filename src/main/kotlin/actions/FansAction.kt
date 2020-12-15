@@ -17,6 +17,12 @@ object FansAction : MessageHandler {
                 containsAny("alex", "aa", "a少", ignoreCase = true) -> {
                     File("asset/Alex.jpg").uploadAsImage()
                 }
+                containsAny("大宝", ignoreCase = true) -> {
+                    File("asset/dabao.png").uploadAsImage()
+                }
+                containsAny("星星", ignoreCase = true) -> {
+                    File("asset/xing.png").uploadAsImage()
+                }
                 else -> {
                     null
                 }

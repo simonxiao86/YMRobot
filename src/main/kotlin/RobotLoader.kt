@@ -1,8 +1,8 @@
 package com.yumi.kotlin
 
 import com.google.gson.JsonParser
-import com.yumi.kotlin.actions.GroupListenerHost
-import com.yumi.kotlin.actions.MessageSubscriber
+import com.yumi.kotlin.subscriber.GroupListenerHost
+import com.yumi.kotlin.subscriber.MessageSubscriber
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
@@ -13,16 +13,25 @@ import net.mamoe.mirai.join
 import java.io.FileReader
 
 
-// 957968887：测试群
-// 656238669：糖果小群
-// 181398081：FlutterCandies
-// 892398530：OpenFlutter
-fun Group.isValidGroup(): Boolean = id == 957968887L || id == 656238669L || id == 892398530L || id == 181398081L
+val allValidGroups by lazy {
+    FileReader("./src/main/kotlin/data/group.json").use {
+        JsonParser.parseString(it.readText()).asJsonArray
+    }.map {
+        it.asJsonObject["groupId"].asLong
+    }
+}
 
-// 776575158：糖果小蜜
-// 3090077983：糖果小爷
-// 2300406668：糖果小宝
-fun Member.isRobot(): Boolean = id == 776575158L || id == 3090077983L || id == 2300406668L
+val allRobots by lazy {
+    FileReader("./src/main/kotlin/data/robot.json").use {
+        JsonParser.parseString(it.readText()).asJsonArray
+    }.map {
+        it.asJsonObject["robotId"].asLong
+    }
+}
+
+fun Group.isValidGroup(): Boolean = allValidGroups.contains(this.id)
+
+fun Member.isRobot(): Boolean = allRobots.contains(this.id)
 
 suspend fun main() {
     val json = FileReader("./src/main/config.json").use {

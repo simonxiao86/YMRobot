@@ -1,5 +1,6 @@
 package com.yumi.kotlin.actions
 
+import com.yumi.kotlin.subscriber.GroupListenerHost
 import com.yumi.kotlin.util.contains
 import com.yumi.kotlin.util.isManager
 import com.yumi.kotlin.util.startsWith

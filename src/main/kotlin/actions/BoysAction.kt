@@ -29,10 +29,9 @@ object BoysAction : MessageHandler {
                 it.path.isImage()
             }
             if (images.isEmpty()) return
-            val downloadUrl = images[Random.nextInt(0, images.size)].download_url
-            val accessToken = FileReader("./src/main/kotlin/data/gitee_token.txt").readText()
+            val path = images[Random.nextInt(0, images.size)].path
             val imagePath =
-                "${downloadUrl}?access_token=$accessToken"
+                "https://yumi0629.gitee.io/dress/${path}"
             val file = File("tmp/${System.currentTimeMillis()}")
             try {
                 val byteArray = HttpClient(OkHttp).get<ByteArray>(imagePath)
