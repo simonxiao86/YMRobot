@@ -1,0 +1,34 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.72'
+    id 'application'
+}
+
+group 'com.yumi'
+version '1.0'
+
+repositories {
+    maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.mamoe:mirai-core-qqandroid:1.3.3'
+    implementation "io.ktor:ktor-client-okhttp:1.3.0"
+    implementation "io.ktor:ktor-client-json:1.3.0"
+    implementation "io.ktor:ktor-client-gson:1.3.0"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+// Notice the "Kt" in the end, meaning the main is not in the class
+application {
+    mainClassName = "com.yumi.kotlin.MyLoaderKt"
+}
