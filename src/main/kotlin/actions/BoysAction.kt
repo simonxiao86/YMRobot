@@ -3,7 +3,7 @@ package com.yumi.kotlin.actions
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.yumi.kotlin.data.Tree
-import com.yumi.kotlin.isImage
+import com.yumi.kotlin.util.isImage
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.request.get
@@ -13,9 +13,9 @@ import java.io.File
 import java.io.FileReader
 import kotlin.random.Random
 
-object BoysAction {
+object BoysAction : MessageHandler {
 
-    suspend fun invoke(event: GroupMessageEvent) {
+    override suspend fun invoke(event: GroupMessageEvent) {
         val boys = FileReader("./src/main/kotlin/data/boys.json").use {
             Gson().fromJson<List<Tree>>(it.readText(), object : TypeToken<List<Tree>>() {}.type)
         }.filter {

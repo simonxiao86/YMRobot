@@ -1,8 +1,8 @@
 package com.yumi.kotlin
 
 import com.google.gson.JsonParser
-import com.yumi.kotlin.actions.GroupAction
-import com.yumi.kotlin.actions.MessageAction
+import com.yumi.kotlin.actions.GroupListenerHost
+import com.yumi.kotlin.actions.MessageSubscriber
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
@@ -36,9 +36,9 @@ suspend fun main() {
         fileBasedDeviceInfo("device.json") // 使用 "device.json" 保存设备信息
     }.alsoLogin()  //新建Bot并登录
 
-    ymBot.registerEvents(GroupAction)
+    ymBot.registerEvents(GroupListenerHost)
     ymBot.subscribeGroupMessages {
-        MessageAction.invoke(this)
+        MessageSubscriber.subscribe(this)
     }
     ymBot.join() // 等待 Bot 离线, 避免主线程退出
 }

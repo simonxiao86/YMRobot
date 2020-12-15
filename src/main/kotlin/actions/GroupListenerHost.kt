@@ -1,8 +1,10 @@
 package com.yumi.kotlin.actions
 
 import MaxSizeHashMap
-import com.yumi.kotlin.formatTime
+import com.yumi.kotlin.util.formatTime
 import com.yumi.kotlin.isValidGroup
+import com.yumi.kotlin.util.formatSecondsToString
+import com.yumi.kotlin.util.isManager
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.event.EventHandler
 import net.mamoe.mirai.event.SimpleListenerHost
@@ -12,7 +14,7 @@ import net.mamoe.mirai.message.data.MessageChain
 import net.mamoe.mirai.message.data.PlainText
 import net.mamoe.mirai.message.data.id
 
-object GroupAction : SimpleListenerHost() {
+object GroupListenerHost : SimpleListenerHost() {
 
     private val cache: MaxSizeHashMap<Int, MessageChain?> = MaxSizeHashMap(50)
 
@@ -38,24 +40,8 @@ object GroupAction : SimpleListenerHost() {
 
     @EventHandler
     suspend fun MemberMuteEvent.onEvent() {
-        val format = fun(duration: Int): String {
-            if (duration < 60) {
-                return "$duration 秒"
-            }
-            var result = duration / 60L
-            if (result < 60) {
-                return "$result 分钟"
-            }
-            var sub = result.toInt() % 60
-            result /= 60L
-            if (result < 24) {
-                return if (sub == 0) "$result 小时 " else "$result 小时 $sub 分钟"
-            }
-            sub = result.toInt() % 24
-            result /= 24L
-            return if (sub == 0) "$result 天" else "$result 天 $sub 小时"
-        }
-        val text = "✿✿ヽ(°▽°)ノ✿恭喜\"${member.nameCardOrNick}\"喜提禁言套餐一份~~\n套餐剩余时间：${format(durationSeconds)}"
+        val text =
+            "✿✿ヽ(°▽°)ノ✿恭喜\"${member.nameCardOrNick}\"喜提禁言套餐一份~~\n套餐剩余时间：${durationSeconds.formatSecondsToString()}"
         if (group.isValidGroup()) {
             group.sendMessage(text)
         }
@@ -74,7 +60,7 @@ object GroupAction : SimpleListenerHost() {
         if (antiRecall[this.group.id] != true) return
         if (this.group.isValidGroup()) {
             // 管理员的撤回操作不处理
-//            if (operator?.permission?.level ?: 0 == 1 || operator?.permission?.level ?: 0 == 2) return
+            if (operator.isManager()) return
             val name = author.nameCardOrNick
             val time = formatTime(messageTime)
             val message = cache[messageId] ?: return

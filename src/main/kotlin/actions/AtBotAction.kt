@@ -6,13 +6,12 @@ import com.yumi.kotlin.isRobot
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.request.get
-import net.mamoe.mirai.event.GroupMessageSubscribersBuilder
 import net.mamoe.mirai.message.GroupMessageEvent
 import java.io.FileReader
 
-object AtBotAction {
+object AtBotAction : MessageHandler {
 
-    suspend fun invoke(event: GroupMessageEvent) {
+    override suspend fun invoke(event: GroupMessageEvent) {
         event.run {
             if (this.sender.isRobot()) return@run  //  屏蔽机器人消息
             print("atBot invoke\n")
