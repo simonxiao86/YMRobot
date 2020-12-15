@@ -14,7 +14,7 @@ import java.io.FileReader
 
 
 val allValidGroups by lazy {
-    FileReader("./src/main/kotlin/data/group.json").use {
+    FileReader("./data/group.json").use {
         JsonParser.parseString(it.readText()).asJsonArray
     }.map {
         it.asJsonObject["groupId"].asLong
@@ -22,7 +22,7 @@ val allValidGroups by lazy {
 }
 
 val allRobots by lazy {
-    FileReader("./src/main/kotlin/data/robot.json").use {
+    FileReader("./data/robot.json").use {
         JsonParser.parseString(it.readText()).asJsonArray
     }.map {
         it.asJsonObject["robotId"].asLong
@@ -34,7 +34,7 @@ fun Group.isValidGroup(): Boolean = allValidGroups.contains(this.id)
 fun Member.isRobot(): Boolean = allRobots.contains(this.id)
 
 suspend fun main() {
-    val json = FileReader("./src/main/config.json").use {
+    val json = FileReader("./data/config.json").use {
         JsonParser.parseString(it.readText()).asJsonObject
     }
     val qqId = json["qq"].asLong //Bot的QQ号，需为Long类型，在结尾处添加大写L

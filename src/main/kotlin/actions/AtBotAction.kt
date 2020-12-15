@@ -17,7 +17,7 @@ object AtBotAction : MessageHandler {
             print("atBot invoke\n")
             val content = this.message.last().toString()
             if (content.isBlank()) {
-                FileReader("./src/main/kotlin/data/introduction.txt").use {
+                FileReader("./data/introduction.txt").use {
                     reply(it.readText())
                 }
                 return@run

@@ -30,5 +30,12 @@ compileTestKotlin {
 
 // Notice the "Kt" in the end, meaning the main is not in the class
 application {
-    mainClassName = "com.yumi.kotlin.MyLoaderKt"
+    mainClassName = "com.yumi.kotlin.RobotLoaderKt"
+}
+
+distZip {
+    into(project.name + '-' + project.version) {
+        from '.'
+        include 'data/*', 'asset/*', 'temp/*'
+    }
 }

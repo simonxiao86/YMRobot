@@ -16,7 +16,7 @@ import kotlin.random.Random
 object BoysAction : MessageHandler {
 
     override suspend fun invoke(event: GroupMessageEvent) {
-        val boys = FileReader("./src/main/kotlin/data/boys.json").use {
+        val boys = FileReader("./data/boys.json").use {
             Gson().fromJson<List<Tree>>(it.readText(), object : TypeToken<List<Tree>>() {}.type)
         }.filter {
             it.type == "dir"
@@ -32,7 +32,7 @@ object BoysAction : MessageHandler {
             val path = images[Random.nextInt(0, images.size)].path
             val imagePath =
                 "https://yumi0629.gitee.io/dress/${path}"
-            val file = File("tmp/${System.currentTimeMillis()}")
+            val file = File.createTempFile("./tmp/${System.currentTimeMillis()}", ".jpg")
             try {
                 val byteArray = HttpClient(OkHttp).get<ByteArray>(imagePath)
                 file.writeBytes(byteArray)
