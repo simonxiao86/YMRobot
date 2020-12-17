@@ -1,7 +1,11 @@
 package com.yumi.kotlin.util
 
+import com.google.gson.Gson
+import com.yumi.kotlin.actions.RecallAction
+import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
+
 
 fun formatTime(millSec: Int): String? {
     return SimpleDateFormat("HH:mm:ss").format(Date(millSec * 1000L))
@@ -31,4 +35,24 @@ fun String?.isImage(): Boolean {
             || this.endsWith("webp")
             || this.endsWith("jpg")
             || this.endsWith("jpeg"))
+}
+
+fun isAm(): Boolean {
+    val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+    return hour in 6..10
+}
+
+fun writeToFile(src: String, file: File) {
+    if (!file.exists())
+        file.createNewFile()
+    FileWriter(file).apply {
+        write(src)
+        flush()
+        close()
+    }
+}
+
+suspend fun Int.simpleRate(hit: suspend () -> Unit) {
+    if (Random().nextInt(100) < this)
+        hit()
 }

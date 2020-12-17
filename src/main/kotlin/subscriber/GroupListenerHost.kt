@@ -1,33 +1,21 @@
 package com.yumi.kotlin.subscriber
 
-import MaxSizeHashMap
-import com.yumi.kotlin.util.formatTime
+import com.yumi.kotlin.actions.NewsAction
+import com.yumi.kotlin.actions.RecallAction
 import com.yumi.kotlin.isValidGroup
 import com.yumi.kotlin.util.formatSecondsToString
-import com.yumi.kotlin.util.isManager
+import com.yumi.kotlin.util.isAm
 import net.mamoe.mirai.contact.nameCardOrNick
 import net.mamoe.mirai.event.EventHandler
 import net.mamoe.mirai.event.SimpleListenerHost
 import net.mamoe.mirai.event.events.*
 import net.mamoe.mirai.message.GroupMessageEvent
-import net.mamoe.mirai.message.data.MessageChain
-import net.mamoe.mirai.message.data.PlainText
-import net.mamoe.mirai.message.data.id
 
 object GroupListenerHost : SimpleListenerHost() {
 
-    private val cache: MaxSizeHashMap<Int, MessageChain?> = MaxSizeHashMap(50)
-
-    private var antiRecall: LinkedHashMap<Long, Boolean> =
-        linkedMapOf(Pair(957968887L, true), Pair(656238669L, true), Pair(181398081L, true))
-
-    fun setAntiRecallConfig(groupId: Long, isAnti: Boolean) {
-        antiRecall[groupId] = isAnti
-    }
-
     @EventHandler
     suspend fun GroupMessageEvent.onEvent() {
-        cache[this.message.id] = this.message
+        RecallAction.addCache(this.message)
     }
 
     @EventHandler
@@ -35,6 +23,7 @@ object GroupListenerHost : SimpleListenerHost() {
         val text = if (this.new) "(*^▽^*)关灯啦~~" else "(*^▽^*)开灯啦~~"
         if (this.group.isValidGroup()) {
             this.group.sendMessage(text)
+            if (!this.new && isAm()) NewsAction().invoke(this)
         }
     }
 
@@ -57,15 +46,7 @@ object GroupListenerHost : SimpleListenerHost() {
 
     @EventHandler
     suspend fun MessageRecallEvent.GroupRecall.onEvent() {
-        if (antiRecall[this.group.id] != true) return
-        if (this.group.isValidGroup()) {
-            // 管理员的撤回操作不处理
-            if (operator.isManager()) return
-            val name = author.nameCardOrNick
-            val time = formatTime(messageTime)
-            val message = cache[messageId] ?: return
-            this.group.sendMessage(PlainText("$name $time 撤回了一条消息：\n").plus(message))
-        }
+        RecallAction.invoke(this)
     }
 
 }

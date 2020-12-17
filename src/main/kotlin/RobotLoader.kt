@@ -3,6 +3,7 @@ package com.yumi.kotlin
 import com.google.gson.JsonParser
 import com.yumi.kotlin.subscriber.GroupListenerHost
 import com.yumi.kotlin.subscriber.MessageSubscriber
+import com.yumi.kotlin.util.TimerManager
 import net.mamoe.mirai.Bot
 import net.mamoe.mirai.alsoLogin
 import net.mamoe.mirai.contact.Group
@@ -49,5 +50,6 @@ suspend fun main() {
     ymBot.subscribeGroupMessages {
         MessageSubscriber.subscribe(this)
     }
+    TimerManager.run()  // 启动定时清除任务
     ymBot.join() // 等待 Bot 离线, 避免主线程退出
 }
