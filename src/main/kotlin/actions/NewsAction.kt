@@ -3,6 +3,7 @@ package com.yumi.kotlin.actions
 import com.google.gson.Gson
 import com.yumi.kotlin.data.News
 import com.yumi.kotlin.data.NewsResp
+import com.yumi.kotlin.util.newsUrl
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.okhttp.OkHttp
 import io.ktor.client.request.get
@@ -32,7 +33,6 @@ class NewsAction : EventHandler {
                 val message = news.joinToString("\n") {
                     "${it.title}\n${shortUrls[it.item_id]}"
                 }
-                println(message)
                 event.group.sendMessage("今日份早安新闻请查收：\n$message")
             }
         } catch (e: Exception) {
@@ -41,11 +41,15 @@ class NewsAction : EventHandler {
     }
 
     private suspend fun tryRequest(): String {
-        // 该头条 api 不稳定，可能返回空数据，此处设定最多重试 5 次
+        // 该头条 api 不稳定，可能返回空数据，此处设定最多重试 10 次
         try {
             tryCount++
+//            val resp = HttpClient(OkHttp).get<String>(
+//                "http://m.toutiao.com/list/?tag=news_tech&ac=wap&count=$defaultNewsCount&format=json_raw&as=479BB4B7254C150&cp=7E0AC8874BB0985"
+//            )
+            // 直接请求返回数据会不足，所以这里采用服务器转发
             val resp = HttpClient(OkHttp).get<String>(
-                "http://m.toutiao.com/list/?tag=news_tech&ac=wap&count=$defaultNewsCount&format=json_raw&as=479BB4B7254C150&cp=7E0AC8874BB0985"
+                "$newsUrl$defaultNewsCount"
             )
             if (tryCount < maxRetryCount) {
                 if (resp.isBlank()) {
@@ -62,7 +66,10 @@ class NewsAction : EventHandler {
         } catch (e: Exception) {
             println("Api error: ${e.message}, retry! Has tried $tryCount times.")
             e.printStackTrace()
-            return tryRequest()
+            return if (tryCount < maxRetryCount)
+                tryRequest()
+            else
+                ""
         }
     }
 

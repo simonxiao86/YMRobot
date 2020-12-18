@@ -23,7 +23,8 @@ object GroupListenerHost : SimpleListenerHost() {
         val text = if (this.new) "(*^▽^*)关灯啦~~" else "(*^▽^*)开灯啦~~"
         if (this.group.isValidGroup()) {
             this.group.sendMessage(text)
-            if (!this.new && isAm()) NewsAction().invoke(this)
+            if (!this.new && isAm())
+                NewsAction().invoke(this)
         }
     }
 
