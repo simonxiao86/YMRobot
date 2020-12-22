@@ -28,9 +28,16 @@ object CommandAction : MessageHandler {
                 }
             }
             startsWith("/recall").and(contains("status")).yes {
-                RecallAction.showMembers(this.group.id,this.sender)?.let {
+                RecallAction.showMembers(this.group.id, this.sender)?.let {
                     reply(it)
                 }
+            }
+
+            startsWith("/juejin").yes {
+                JueJinAction().invoke(this)
+            }
+            startsWith("/stock").yes {
+                StockAction().invoke(this)
             }
             startsWith("/女装大佬").yes {
                 BoysAction().invoke(this)

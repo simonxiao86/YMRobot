@@ -34,3 +34,28 @@ data class EmojiResp(
     val msg: String,
     val url: String
 )
+
+data class StockSearchResp(
+    val Code: Int,
+    val Data: List<Stock>?
+)
+
+data class Stock(
+    val Type: Int,
+    val Name: String,
+    val Datas: List<StockInfo>
+)
+
+data class StockInfo(
+    val Code: String,
+    val Name: String,
+    val MarketType: String,
+    val MktNum: String
+)
+
+data class JueJinSearchRes(
+    val key_word: String,
+    val id_type: Int,
+    val limit: Int,
+    val search_type: Int
+)

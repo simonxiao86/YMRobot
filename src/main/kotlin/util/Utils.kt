@@ -1,7 +1,5 @@
 package com.yumi.kotlin.util
 
-import com.google.gson.Gson
-import com.yumi.kotlin.actions.RecallAction
 import java.io.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -9,6 +7,10 @@ import java.util.*
 
 fun formatTime(millSec: Int): String? {
     return SimpleDateFormat("HH:mm:ss").format(Date(millSec * 1000L))
+}
+
+fun formatTimeToDay(millSec: Int): String? {
+    return SimpleDateFormat("yyyy-MM-dd").format(Date(millSec * 1000L))
 }
 
 fun Int.formatSecondsToString(): String {
@@ -55,4 +57,21 @@ fun writeToFile(src: String, file: File) {
 suspend fun Int.simpleRate(hit: suspend () -> Unit) {
     if (Random().nextInt(100) < this)
         hit()
+}
+
+fun String.isEnglishOrDigit(): Boolean {
+    for (c in this) {
+        if (!c.isLetterOrDigit()) {
+            println("$c is not LetterOrDigit")
+            return false
+        }
+
+    }
+    return true
+}
+
+fun String.dropLetters(): String {
+    return this.filter {
+        it.isDigit()
+    }
 }
